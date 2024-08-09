@@ -12,17 +12,18 @@ use instructions::*;
 use prelude::*;
 use state::marginfi_group::{BankConfigCompact, BankConfigOpt};
 
-cfg_if::cfg_if! {
-    if #[cfg(feature = "mainnet-beta")] {
-        declare_id!("MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA");
-    } else if #[cfg(feature = "devnet")] {
-        declare_id!("neetcne3Ctrrud7vLdt2ypMm21gZHGN2mCmqWaMVcBQ");
-    } else if #[cfg(feature = "staging")] {
-        declare_id!("stag8sTKds2h4KzjUw3zKTsxbqvT4XKHdaR9X9E6Rct");
-    } else {
-        declare_id!("Mfi1111111111111111111111111111111111111111");
-    }
-}
+declare_id!("FJ3uHfHezA5aWZcuaMPq9hvVidnV4w8LxGEY7W1RRKfS");
+// cfg_if::cfg_if! {
+//     if #[cfg(feature = "mainnet-beta")] {
+//         declare_id!("MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA");
+//     } else if #[cfg(feature = "devnet")] {
+//         declare_id!("FJ3uHfHezA5aWZcuaMPq9hvVidnV4w8LxGEY7W1RRKfS");
+//     } else if #[cfg(feature = "staging")] {
+//         declare_id!("stag8sTKds2h4KzjUw3zKTsxbqvT4XKHdaR9X9E6Rct");
+//     } else {
+//         declare_id!("Mfi1111111111111111111111111111111111111111");
+//     }
+// }
 
 #[program]
 pub mod marginfi {

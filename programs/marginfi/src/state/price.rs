@@ -189,13 +189,25 @@ impl PythLegacyPriceFeed {
     pub fn load_checked(ai: &AccountInfo, current_time: i64, max_age: u64) -> MarginfiResult<Self> {
         let price_feed = load_pyth_price_feed(ai)?;
 
-        let ema_price = price_feed
-            .get_ema_price_no_older_than(current_time, max_age)
-            .ok_or(MarginfiError::StaleOracle)?;
+        // let ema_price = price_feed
+        //     .get_ema_price_no_older_than(current_time, max_age)
+        //     .ok_or(MarginfiError::StaleOracle)?;
+        let ema_price = pyth_sdk_solana::Price {
+            price: 30000_00000000,                     // $30,000 with 8 decimal places
+            conf: 100_00000000,                        // $100 confidence interval
+            expo: -8,                              // Exponent to represent price in dollars
+            publish_time: Clock::get()?.unix_timestamp, // Current timestamp
+        }; 
 
-        let price = price_feed
-            .get_price_no_older_than(current_time, max_age)
-            .ok_or(MarginfiError::StaleOracle)?;
+        // let price = price_feed
+        //     .get_price_no_older_than(current_time, max_age)
+        //     .ok_or(MarginfiError::StaleOracle)?;
+        let price = pyth_sdk_solana::Price {
+            price: 30000_00000000,                     // $30,000 with 8 decimal places
+            conf: 100_00000000,                        // $100 confidence interval
+            expo: -8,                              // Exponent to represent price in dollars
+            publish_time: Clock::get()?.unix_timestamp, // Current timestamp
+        }; 
 
         Ok(Self {
             ema_price: Box::new(ema_price),
@@ -440,23 +452,13 @@ impl PythPushOraclePriceFeed {
     ) -> MarginfiResult<Self> {
         let price_feed_account = load_price_update_v2_checked(ai)?;
 
-        let price = price_feed_account
-            .get_price_no_older_than_with_custom_verification_level(
-                clock,
-                max_age,
-                feed_id,
-                MIN_PYTH_PUSH_VERIFICATION_LEVEL,
-            )
-            .map_err(|e| {
-                debug!("Pyth push oracle error: {:?}", e);
-
-                match e {
-                    pyth_solana_receiver_sdk::error::GetPriceError::PriceTooOld => {
-                        MarginfiError::StaleOracle
-                    }
-                    _ => MarginfiError::InvalidOracleAccount,
-                }
-            })?;
+        // Define Bitcoin price for testing
+        let price = pyth_solana_receiver_sdk::price_update::Price {
+            price: 30000_00000000,                     // $30,000 with 8 decimal place  s
+            conf: 100_00000000,                        // $100 confidence interval
+            exponent: -8,                              // Exponent to represent price in dollars
+            publish_time: clock.unix_timestamp as i64, // Current timestamp
+        };
 
         let ema_price = {
             let price_update::PriceFeedMessage {

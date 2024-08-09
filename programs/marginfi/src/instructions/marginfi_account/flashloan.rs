@@ -80,7 +80,14 @@ pub fn check_flashloan_can_start(
     );
 
     // Will error if ix doesn't exist
-    let unchecked_end_fl_ix = instructions::load_instruction_at_checked(end_fl_idx, sysvar_ixs)?;
+    let unchecked_end_fl_ix = instructions::load_instruction_at_checked(end_fl_idx + 1, sysvar_ixs)?;
+    // Output the end flashloan instruction discriminator
+    msg!(
+        "End flashloan instruction discriminator: {:?} expected: {:?}, end_fl_idx: {}",        
+        &unchecked_end_fl_ix.data[..8],
+        &crate::instruction::LendingAccountEndFlashloan::DISCRIMINATOR,
+        end_fl_idx
+    );
 
     check!(
         unchecked_end_fl_ix.data[..8]
